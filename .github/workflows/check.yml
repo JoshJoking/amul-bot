@@ -1,0 +1,38 @@
+name: Amul whey check
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: amul-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests
+      - name: Check stock
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PINCODE: ${{ secrets.PINCODE }}
+          PRODUCTS: ${{ vars.PRODUCTS }}
+          NOTIFY_SOLD_OUT: ${{ vars.NOTIFY_SOLD_OUT || 'false' }}
+        run: python amul_whey_bot.py
+      - name: Save state
+        run: |
+          git config user.name "amul-bot"
+          git config user.email "amul-bot@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || (git commit -m "state update" && git push)
