@@ -2,7 +2,7 @@
   "fails": 0,
   "products": {
     "amul-chocolate-whey-protein-34-g-or-pack-of-60-sachets": "out",
-    "amul-high-protein-buttermilk-200-ml-or-pack-of-30": "in",
+    "amul-high-protein-buttermilk-200-ml-or-pack-of-30": "out",
     "amul-high-protein-plain-lassi-200-ml-or-pack-of-30": "out"
   }
 }
